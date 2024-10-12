@@ -177,27 +177,29 @@ def main(input_date=None):
                     games_info = race_day_data.get("games", {})
                     v75_games = games_info.get("V75", [])
                     if v75_games:
-                        game_id = v75_games[0].get("id")  # Fetch the game ID from V75[0]
-                        race_ids = v75_games[0].get("races", [])
+                        if v75_games[0].get("races", []):  # Check if races are available
+                            game_id = v75_games[0].get("id")  # Fetch the game ID from V75[0]
+                            race_ids = v75_games[0].get("races", [])
 
-                        print(f"V75 Game ID: {game_id}")
-                        print(f"Race IDs: {', '.join(race_ids)}")
+                            print(f"V75 Game ID: {game_id}")
+                            print(f"Race IDs: {', '.join(race_ids)}")
 
-                        # Fetch game data using the game ID
-                        game_data = fetch_v75_game_data(game_id)
-                        if game_data:
-                            display_races_and_horses(game_data.get("races", []))
+                            # Fetch game data using the game ID
+                            game_data = fetch_v75_game_data(game_id)
+                            if game_data:
+                                display_races_and_horses(game_data.get("races", []))
+                            else:
+                                print(f"Failed to fetch game data for {game_id}")
                         else:
-                            print(f"Failed to fetch game data for {game_id}")
+                            print(f"V75 races are scheduled but not yet available for {input_date}")
                     else:
-                        print(
-                            f"No V75 game data found for {input_date} at {track['name']} (ID: {track_id})."
-                        )
+                        print(f"No V75 game data found for {input_date} at {track['name']} (ID: {track_id}).")
                     break
             else:
                 print(f"No V75 track found for {input_date}")
         else:
             print(f"No race data available for {input_date}")
+
 
 
 # Usage example:

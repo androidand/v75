@@ -1,0 +1,128 @@
+openapi: 3.0.3
+info:
+  title: ATG Racing Information API
+  version: 1.0.0
+  description: API for retrieving racing information including games, races, and horses.
+servers:
+  - url: https://www.atg.se/services/racinginfo/v1
+paths:
+  /api/calendar/day/{date}:
+    get:
+      summary: Get race day data
+      parameters:
+        - in: path
+          name: date
+          required: true
+          schema:
+            type: string
+            format: date
+          description: The date of the race day in the format YYYY-MM-DD.
+      responses:
+        '200':
+          description: Returns race day data for the specified date.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date:
+                    type: string
+                  tracks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        biggestGameType:
+                          type: string
+                        races:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              startTime:
+                                type: string
+                              number:
+                                type: integer
+  /api/games/{game_id}:
+    get:
+      summary: Get detailed V75 game data
+      parameters:
+        - in: path
+          name: game_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the game (e.g., V75_2024-10-05_11_5).
+      responses:
+        '200':
+          description: Returns detailed game data including races and horse info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  races:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        startTime:
+                          type: string
+                        horses:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              name:
+                                type: string
+                              trainer:
+                                type: object
+                                properties:
+                                  firstName:
+                                    type: string
+                                  lastName:
+                                    type: string
+  /api/horses/{horse_id}:
+    get:
+      summary: Get horse details
+      parameters:
+        - in: path
+          name: horse_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the horse.
+      responses:
+        '200':
+          description: Returns detailed information about a specific horse.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  age:
+                    type: integer
+                  money:
+                    type: integer
+                  pedigree:
+                    type: object
+                    properties:
+                      father:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          nationality:
+                            type: string

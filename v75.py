@@ -113,6 +113,7 @@ def display_races_and_horses(races):
         for start in race.get("starts", []):
             horse = start["horse"]
             driver = start.get("driver", {})
+            trainer = start.get("trainer", {})
             horse_name = horse.get("name", "Unknown")
             horse_id = horse.get("id")
 
@@ -126,11 +127,12 @@ def display_races_and_horses(races):
 
             driver_first_name = driver.get("firstName", "Unknown")
             driver_last_name = driver.get("lastName", "Unknown")
-            trainer_last_name = driver.get("lastName", "Unknown")
+            trainer_first_name = trainer.get("firstName", "Unknown")
+            trainer_last_name = trainer.get("lastName", "Unknown")
             earnings = horse.get("money", "N/A")
 
             print(
-                f"{start['number']}. {horse_name} ({horse_nationality}) - Trainer: {trainer_last_name}, Driver: {driver_first_name} {driver_last_name}, Earnings: {earnings} SEK"
+                f"{start['number']}. {horse_name} ({horse_nationality}) - Trainer: {trainer_first_name} {trainer_last_name}, Driver: {driver_first_name} {driver_last_name}, Earnings: {earnings} SEK"
             )
 
 
@@ -141,7 +143,7 @@ def get_next_saturday():
 
 
 def list_v75_dates_for_year():
-    """Lists all Saturdays (V75 race days) for the current year."""
+    """List all Saturdays for the current year, assuming V75 runs on Saturdays."""
     current_year = datetime.now().year
     start_date = datetime(current_year, 1, 1)
     end_date = datetime(current_year, 12, 31)

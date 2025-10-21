@@ -19,8 +19,11 @@ This project aims to:
 - Horse nationality resolution with pedigree fallback
 
 ### Known Issues
-- ATG API currently returns 403 Forbidden (as of October 2025)
-- Need alternative data sources (web scraping, third-party APIs)
+- **ATG API Access:** API now returns 403 Forbidden (as of October 2025)
+  - API was publicly accessible until August 2025
+  - Now requires authentication or has access restrictions
+  - See [API_EXPLORATION_REPORT.md](API_EXPLORATION_REPORT.md) for details
+- **Workarounds:** Browser automation or web scraping needed (see implementation guide)
 
 ### Roadmap
 See [ARCHITECTURE_PROPOSAL.md](ARCHITECTURE_PROPOSAL.md) for detailed development roadmap.
@@ -28,6 +31,8 @@ See [ARCHITECTURE_PROPOSAL.md](ARCHITECTURE_PROPOSAL.md) for detailed developmen
 ## Quick Start
 
 ### Current Implementation
+
+#### Option 1: Original Script (v75.py)
 
 1. **Install dependencies**:
    ```bash
@@ -49,6 +54,27 @@ See [ARCHITECTURE_PROPOSAL.md](ARCHITECTURE_PROPOSAL.md) for detailed developmen
    python3 v75.py list-dates
    ```
 
+#### Option 2: Modern API Client (NEW)
+
+```python
+from api_client import ATGAPIClient
+
+# Initialize client
+client = ATGAPIClient()
+
+# Get next V75
+game = client.get_v75_game_for_date(client.get_next_saturday())
+
+if game:
+    for race in game.races:
+        print(f"Race {race.number}: {race.name}")
+        for start in race.starts:
+            if start.horse:
+                print(f"  {start.number}. {start.horse.name} ({start.horse.get_nationality()})")
+```
+
+See `examples.py` for more usage patterns.
+
 ### Future Implementation
 
 See [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) for step-by-step implementation instructions.
@@ -59,9 +85,13 @@ See [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) for step-by-step implemen
 
 | Document | Description |
 |----------|-------------|
-| [API_DOCUMENTATION.md](API_DOCUMENTATION.md) | Complete ATG API reference with endpoints, data models, and examples |
+| [API_EXPLORATION_REPORT.md](API_EXPLORATION_REPORT.md) | ✨ **NEW:** Complete API mapping with all endpoints and data models |
+| [API_DOCUMENTATION.md](API_DOCUMENTATION.md) | General ATG API reference and overview |
 | [ARCHITECTURE_PROPOSAL.md](ARCHITECTURE_PROPOSAL.md) | Comprehensive system architecture for betting analysis platform |
 | [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) | Step-by-step guide for implementing the proposed architecture |
+| [models.py](models.py) | ✨ **NEW:** Python dataclass definitions for all API entities |
+| [api_client.py](api_client.py) | ✨ **NEW:** Type-safe API client implementation |
+| [examples.py](examples.py) | ✨ **NEW:** Usage examples and code patterns |
 
 ### Key Topics
 
@@ -140,20 +170,25 @@ See [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) for step-by-step implemen
 
 ```
 v75/
-├── v75.py                      # Current implementation
-├── describe_json.py            # JSON analysis utility
-├── atgOpenAPI.yaml            # API specification
-├── explore_api.py             # API endpoint discovery
+├── v75.py                         # Original implementation
+├── models.py                      # ✨ NEW: Type-safe dataclass models
+├── api_client.py                  # ✨ NEW: Modern API client
+├── examples.py                    # ✨ NEW: Usage examples
 │
-├── docs/                      # Documentation
-│   ├── API_DOCUMENTATION.md
-│   ├── ARCHITECTURE_PROPOSAL.md
-│   └── IMPLEMENTATION_GUIDE.md
+├── describe_json.py               # JSON analysis utility
+├── atgOpenAPI.yaml               # API specification
+├── explore_api.py                # API endpoint discovery
+├── explore_api_v2.py             # Enhanced endpoint discovery
 │
-├── tests/                     # Test suite
-│   └── test_v75_dates.py
+├── Documentation/
+│   ├── README.md                 # This file
+│   ├── API_DOCUMENTATION.md      # General API overview
+│   ├── API_EXPLORATION_REPORT.md # ✨ NEW: Complete API mapping
+│   ├── ARCHITECTURE_PROPOSAL.md  # System architecture
+│   └── IMPLEMENTATION_GUIDE.md   # Implementation guide
 │
-└── README.md                  # This file
+└── tests/
+    └── test_v75_dates.py         # Test suite
 ```
 
 ### Proposed Structure

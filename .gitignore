@@ -1,2 +1,3 @@
 *.json
-v75env/
+v75env/__pycache__/
+*.pyc
